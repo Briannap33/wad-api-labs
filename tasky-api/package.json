@@ -21,6 +21,7 @@
     "@babel/preset-react": "^7.26.3",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "mongoose": "^8.9.3",
     "uuid": "^11.0.3"
   }
 }
