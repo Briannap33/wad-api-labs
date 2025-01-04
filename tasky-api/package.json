@@ -17,6 +17,8 @@
     "nodemon": "^3.1.9"
   },
   "dependencies": {
+    "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
+    "@babel/preset-react": "^7.26.3",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "uuid": "^11.0.3"
