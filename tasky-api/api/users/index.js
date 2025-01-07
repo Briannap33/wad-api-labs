@@ -2,6 +2,7 @@ import express from 'express';
 import User from './userModel';
 
 const router = express.Router(); 
+const passwordValidator = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
 // Get all users
 router.get('/', async (req, res) => {
@@ -9,21 +10,28 @@ router.get('/', async (req, res) => {
     res.status(200).json(users);
 });
 
-// register(Create)/Authenticate User
+// register/Authenticate User
 router.post('/', async (req, res) => {
-    if (req.query.action === 'register') {  //if action is 'register' then save to DB
-        await User(req.body).save();
+    if (!req.body.password) {
+        return res.status(400).json({ message: 'Password is required' });
+    }
+     if (!passwordValidator.test(req.body.password)) {
+        return res.status(400).json({ message: 'Password must be at least 8 characters long, include at least one letter, one digit, and one special character (@$!%*#?&)' });
+    }
+
+    if (req.query.action === 'register') {
+        const user = new User(req.body);
+        await user.save();
         res.status(201).json({
             code: 201,
-            msg: 'Successful created new user.',
+            msg: 'Successfully created a new user.',
         });
-    }
-    else {  //Must be an authenticate then!!! Query the DB and check if there's a match
+    } else {  // Authenticate User
         const user = await User.findOne(req.body);
         if (!user) {
             return res.status(401).json({ code: 401, msg: 'Authentication failed' });
-        }else{
-            return res.status(200).json({ code: 200, msg: "Authentication Successful", token: 'TEMPORARY_TOKEN' });
+        } else {
+            return res.status(200).json({ code: 200, msg: 'Authentication Successful', token: 'TEMPORARY_TOKEN' });
         }
     }
 });
