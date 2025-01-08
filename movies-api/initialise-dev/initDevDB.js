@@ -13,8 +13,8 @@ async function main() {
     }
     await mongoose.connect(process.env.MONGO_DB);
     // Drop collections
-    await User.collection.drop().catch(err => console.log('User collection not found'));
-    await Movie.collection.drop().catch(err => console.log('Movie collection not found'));
+    await User.collection.drop().catch(err => console.log(`Error dropping User collection: ${err.message}`));
+    await Movie.collection.drop().catch(err => console.log(`Error dropping Movie collection: ${err.message}`));
     await User.create(users);
     await Movie.create(movies);
     console.log('Database initialised');
